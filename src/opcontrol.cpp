@@ -21,13 +21,25 @@ auto dt = ChassisControllerFactory::create(
  */
 void opcontrol() {
 	Controller master;
-
+  bool speedy = true;
+  float speed = .5;
+  ControllerButton speedButton(ControllerDigital::L1);
 	while (true) {
-		dt.arcade(
-      master.getAnalog(ControllerAnalog::leftY),
-      master.getAnalog(ControllerAnalog::rightX)
-    );
-    
+    if (speedy) {
+      dt.arcade(
+        master.getAnalog(ControllerAnalog::leftY),
+        master.getAnalog(ControllerAnalog::rightX)
+      );
+    }
+    else {
+      dt.arcade(
+        master.getAnalog(ControllerAnalog::leftY) * speed,
+        master.getAnalog(ControllerAnalog::rightX) * speed
+      );
+    }
+    if (speedButton.changedToPressed) {
+      speedy = !speedy;
+    }
     pros::Task::delay(10);
 	}
 }
